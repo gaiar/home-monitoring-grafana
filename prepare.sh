@@ -13,3 +13,4 @@ sudo chown -R 472:472 ${DATA_DIR}/grafana
 
 #ip=$(ipconfig getifaddr en0)
 #sed -i "" "s/{ipaddress}/$ip/g" test.properties
+docker-compose up -d
