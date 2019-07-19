@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-  
   portainer:
     container_name: portainer
     image: portainer/portainer:latest
@@ -18,11 +17,12 @@ services:
     ports:
       - 1883:1883
     volumes:
-      - ./01-mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-      - ./01-mosquitto/users:/mosquitto/config/users
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/users:/mosquitto/config/users
       - ${DATA_DIR}/mosquitto/data:/mosquitto/data
       - ${DATA_DIR}/mosquitto/log:/mosquitto/log
     restart: always
+    user: '1000:1000'
 
   influxdb:
     image: influxdb:1.7.7
@@ -43,12 +43,24 @@ services:
     volumes:
       - ${DATA_DIR}/grafana:/var/lib/grafana
     restart: always
+    user: '1000:1000'
 
-  mqttbridge:
-    build: ./02-bridge
-    image: nilhcem/mqttbridge
-    container_name: mqttbridge
-    depends_on:
-      - mosquitto
-      - influxdb
+  
+  homeassistant:
+    container_name: home-assistant
+    image: homeassistant/home-assistant
+    volumes:
+      - ${DATA_DIR}/hass/config:/config
+      - /etc/localtime:/etc/localtime:ro
     restart: always
+    network_mode: host
+    user: '1000:1000'
+
+  # mqttbridge:
+  #   build: ./bridge
+  #   image: nilhcem/mqttbridge
+  #   container_name: mqttbridge
+  #   depends_on:
+  #     - mosquitto
+  #     - influxdb
+  #   restart: always
