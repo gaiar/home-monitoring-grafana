@@ -50,7 +50,7 @@ services:
     container_name: home-assistant
     image: homeassistant/home-assistant
     volumes:
-      - ${DATA_DIR}/hass/config:/config
+      - ./hass/config:/config
       - /etc/localtime:/etc/localtime:ro
     restart: always
     network_mode: host
